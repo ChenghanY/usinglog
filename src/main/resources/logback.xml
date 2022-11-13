@@ -1,0 +1,52 @@
+<configuration>
+<!--<configuration scan="true" scanPeriod="30 seconds" > 调试用的, 热更新 -->
+
+    <!-- 可定义变量
+        <variable name="USER_HOME" value="" />
+        <variable file="" />
+        <variable resource="resource1.properties" />
+    -->
+    <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logFile.log</file>
+
+        <encoder>
+            <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--注意区分 RollingFileAppender 和 FileAppender (在不同包下)-->
+    <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>rollingLogFile.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 表达式有两个作用 1.确认滚动增加的最小单位 2. 文件格式 -->
+            <fileNamePattern>rollingLogFile.%d{yyyy-MM-dd_HH-mm}.log</fileNamePattern>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!--该类（也可以写包名）不让root接管, 所以这个类的日志不会打印到控制台-->
+    <logger name="com.james.usinglog.FileOnlyTests" additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
+    <!--顶级是debug日志, ExcludeDebugTests只用打info日志。这里也可以设置包名-->
+    <logger name="com.james.usinglog.InfoTests" level="INFO"/>
+    <logger name="com.james.usinglog.TraceTests" level="TRACE"/>
+
+    <root level="debug">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
+        <appender-ref ref="ROLLING_FILE" />
+    </root>
+</configuration>
