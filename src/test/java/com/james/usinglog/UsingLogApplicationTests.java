@@ -1,32 +1,32 @@
 package com.james.usinglog;
 
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.core.util.StatusPrinter;
+import com.james.usinglog.mapper.TestMapper;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+
+/**
+ * 数据库初始化脚本：
+ *
+ * CREATE TABLE `test` (
+ *   `id` int(11) NOT NULL,
+ *   `hello` varchar(255) DEFAULT NULL,
+ *   PRIMARY KEY (`id`)
+ * ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+ *
+ */
 @SpringBootTest
 class UsingLogApplicationTests {
 
+	@Autowired
+	private TestMapper testMapper;
 	@Test
-	void FirstBabyTest() {
-		Logger logger = LoggerFactory.getLogger(UsingLogApplicationTests.class);
-		logger.error("error");
-		logger.warn("warn");
-		logger.info("info");
-		logger.debug("debug");
-		logger.trace("trace");
-	}
-
-	/**
-	 * 打开配置的详情
-	 */
-	@Test
-	void printInternalStatusTest() {
-		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-		StatusPrinter.print(lc);
+	void MyBatisMapperTest() {
+		testMapper.insert(1, "xxxx");
+		testMapper.update(1, "yyy");
+		testMapper.findHelloById(1);
+		testMapper.delete(1);
 	}
 
 }
